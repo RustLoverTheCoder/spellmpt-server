@@ -2,7 +2,7 @@ use axum::{response::Html, routing::get, Router};
 use std::net::SocketAddr;
 
 #[tokio::main]
-async fn start() {
+async fn start() -> anyhow::Result<()> {
     // build our application with a route
     let app = Router::new().route("/", get(handler));
 
@@ -11,8 +11,8 @@ async fn start() {
     println!("listening on {}", addr);
     axum::Server::bind(&addr)
         .serve(app.into_make_service())
-        .await
-        .unwrap();
+        .await?;
+    Ok(())
 }
 
 async fn handler() -> Html<&'static str> {
@@ -22,7 +22,7 @@ async fn handler() -> Html<&'static str> {
 pub fn main() {
     let result = start();
 
-    // if let Some(err) = result.err() {
-    //     println!("Error: {err}");
-    // }
+    if let Some(err) = result.err() {
+        println!("Error: {err}");
+    }
 }
