@@ -8,3 +8,4 @@ edition = "2021"
 [dependencies]
 axum = "0.6.10"
 tokio = { version = "1.0", features = ["full"] }
+sea-orm = { version = "^0", features = [ "sqlx-postgres", "runtime-tokio-rustls", "macros", "debug-print", "with-chrono", "with-json", "with-uuid", "postgres-array" ] }
