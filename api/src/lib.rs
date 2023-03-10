@@ -1,8 +1,15 @@
 mod handler;
 mod service;
 
-use axum::{response::Html, routing::get, Router};
+use axum::{
+    routing::{get, post},
+    Router,
+};
 use axum_sessions::SessionLayer;
+use handler::{
+    auth::{sign_in, sign_out},
+    user::{get_user_info, update_user_info},
+};
 use reels_config::{
     contants::{JWT_SECRET, REDIS_SESSION_STORE},
     init,
@@ -16,17 +23,25 @@ async fn start() -> anyhow::Result<()> {
     let jwt_secret_bytes = jwt_secret.as_bytes();
     let store = REDIS_SESSION_STORE.get().unwrap().clone();
     let session_layer = SessionLayer::new(store, jwt_secret_bytes).with_secure(false);
-    let app = Router::new().route("/", get(handler)).layer(session_layer);
+    let auth_router = Router::new()
+        .route("/sign/in", post(sign_in))
+        .route("/sign/out", post(sign_out));
+
+    let user_router = Router::new()
+        .route("/get/info", get(get_user_info))
+        .route("/update/info", post(update_user_info));
+    let api_routes = Router::new()
+        .nest("/auth", auth_router)
+        .nest("/user", user_router);
+
+    let app = Router::new().nest("/api", api_routes).layer(session_layer);
     let addr = SocketAddr::from(([127, 0, 0, 1], 8000));
     tracing::info!("addr:{}", addr);
+
     axum::Server::bind(&addr)
         .serve(app.into_make_service())
         .await?;
     Ok(())
-}
-
-async fn handler() -> Html<&'static str> {
-    Html("<h1>Hello, World!</h1>")
 }
 
 pub fn main() {

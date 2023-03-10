@@ -1773,6 +1773,8 @@ dependencies = [
  "entity",
  "migration",
  "reels-config",
+ "serde",
+ "serde_json",
  "tokio",
  "tracing",
  "uuid",
