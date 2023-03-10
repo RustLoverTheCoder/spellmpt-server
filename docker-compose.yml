@@ -12,3 +12,12 @@ services:
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=123456
     container_name: reels-db
+  redis:
+    image: redis:latest
+    ports:
+      - '6379:6379'
+    volumes:
+       - ./redis.conf:/etc/redis/redis.conf 
+    command: redis-server /etc/redis/redis.conf
+    restart: on-failure
+    container_name: reels-redis
