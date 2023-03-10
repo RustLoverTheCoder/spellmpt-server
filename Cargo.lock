@@ -1461,10 +1461,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "reels-config"
+version = "0.1.0"
+
+[[package]]
 name = "reels-server"
 version = "0.1.0"
 dependencies = [
  "reels-api",
+ "reels-config",
 ]
 
 [[package]]

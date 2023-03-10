@@ -6,7 +6,8 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [workspace]
-members = [".", "api", "core", "migration", "entity"]
+members = [".", "api", "core", "migration", "entity", "config"]
 
 [dependencies]
 reels-api = { path = "api" }
+reels-config = { path = "config" }
