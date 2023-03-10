@@ -1,3 +1,6 @@
+mod handler;
+mod service;
+
 use axum::{response::Html, routing::get, Router};
 use axum_sessions::SessionLayer;
 use reels_config::{
