@@ -1,8 +1,10 @@
 use axum::{response::Html, routing::get, Router};
+use reels_config::init;
 use std::net::SocketAddr;
 
 #[tokio::main]
 async fn start() -> anyhow::Result<()> {
+    init().await?;
     // build our application with a route
     let app = Router::new().route("/", get(handler));
 

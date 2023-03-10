@@ -10,4 +10,3 @@ members = [".", "api", "core", "migration", "entity", "config"]
 
 [dependencies]
 reels-api = { path = "api" }
-reels-config = { path = "config" }
