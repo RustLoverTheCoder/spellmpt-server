@@ -16,7 +16,7 @@ pub async fn sign_in(Json(payload): Json<UserForm>) -> (StatusCode, Json<serde_j
 
 pub async fn sign_out() -> (StatusCode, Json<serde_json::Value>) {
     (
-        StatusCode::NOT_FOUND,
+        StatusCode::OK,
         Json(serde_json::json!({ "status": "Not Found" })),
     )
 }
