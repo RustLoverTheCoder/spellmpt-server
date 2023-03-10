@@ -1774,6 +1774,7 @@ dependencies = [
  "migration",
  "reels-config",
  "tokio",
+ "tracing",
  "uuid",
 ]
 
@@ -1782,6 +1783,8 @@ name = "reels-config"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "async-redis-session",
+ "axum-sessions",
  "dotenvy",
  "migration",
  "once_cell",
@@ -1796,6 +1799,7 @@ name = "reels-server"
 version = "0.1.0"
 dependencies = [
  "reels-api",
+ "tracing",
 ]
 
 [[package]]

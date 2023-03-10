@@ -14,6 +14,7 @@ entity = { path = "../entity" }
 reels-config = {path = "../config"}
 axum-sessions = "0.4.1"
 async-redis-session = "0.2.2"
+tracing = "0.1.37"
 
 [dependencies.uuid]
 version = "1.3.0"

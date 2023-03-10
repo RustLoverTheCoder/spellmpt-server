@@ -1,12 +1,21 @@
 use axum::{response::Html, routing::get, Router};
-use reels_config::init;
+use axum_sessions::SessionLayer;
+use reels_config::{
+    contants::{JWT_SECRET, REDIS_SESSION_STORE},
+    init,
+};
 use std::net::SocketAddr;
 
 #[tokio::main]
 async fn start() -> anyhow::Result<()> {
     init().await?;
-    let app = Router::new().route("/", get(handler));
+    let jwt_secret = JWT_SECRET.get().unwrap();
+    let jwt_secret_bytes = jwt_secret.as_bytes();
+    let store = REDIS_SESSION_STORE.get().unwrap().clone();
+    let session_layer = SessionLayer::new(store, jwt_secret_bytes).with_secure(false);
+    let app = Router::new().route("/", get(handler)).layer(session_layer);
     let addr = SocketAddr::from(([127, 0, 0, 1], 8000));
+    tracing::info!("addr:{}", addr);
     axum::Server::bind(&addr)
         .serve(app.into_make_service())
         .await?;

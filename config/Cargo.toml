@@ -14,3 +14,5 @@ sea-orm = { version = "^0", features = [ "sqlx-postgres", "runtime-tokio-rustls"
 migration = { path = "../migration" }
 once_cell = "1.17.1"
 regex = "1.7.1"
+async-redis-session = "0.2.2"
+axum-sessions = "0.4.1"

@@ -10,3 +10,4 @@ members = [".", "api", "core", "migration", "entity", "config"]
 
 [dependencies]
 reels-api = { path = "api" }
+tracing = "0.1.37"
