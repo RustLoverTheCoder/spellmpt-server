@@ -4,6 +4,9 @@
     ```sh
     cargo run -- migrate generate MIGRATION_NAME
     ```
+    ```sh
+    sea-orm-cli migrate generate create_table
+    ```
 - Apply all pending migrations
     ```sh
     cargo run
