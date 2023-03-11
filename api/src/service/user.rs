@@ -1,8 +1,13 @@
 use anyhow::{Ok, Result};
+use chrono::Utc;
 use entity::user;
 use entity::user::Entity as User;
-use migration::sea_orm::{ColumnTrait, EntityTrait, QueryFilter};
+use migration::{
+    sea_orm::{ActiveModelTrait, ColumnTrait, EntityTrait, QueryFilter, Set},
+    DbErr,
+};
 use reels_config::contants::DB;
+use uuid::Uuid;
 
 pub async fn find_user_by_phone(phone: String) -> Result<Option<user::Model>> {
     let db = DB.get().unwrap();
@@ -13,8 +18,20 @@ pub async fn find_user_by_phone(phone: String) -> Result<Option<user::Model>> {
     Ok(user)
 }
 
-pub async fn create_user() -> Result<()> {
-    Ok(())
+pub async fn create_user(phone: String) -> Result<user::Model, DbErr> {
+    let db = DB.get().unwrap();
+    let status = 0;
+    let create_at = Utc::now();
+    let new_user = user::ActiveModel {
+        id: Set(Uuid::new_v4().to_owned()),
+        nickname: Set(phone.to_owned()),
+        phone_number: Set(phone.to_owned()),
+        status: Set(status.to_owned()),
+        created_at: Set(create_at.to_owned().into()),
+        ..Default::default() // all other attributes are `NotSet`
+    };
+    let result = new_user.insert(db).await;
+    return result;
 }
 
 pub async fn get_user_info() -> Result<()> {
