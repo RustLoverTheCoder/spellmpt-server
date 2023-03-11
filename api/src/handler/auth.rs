@@ -17,10 +17,13 @@ pub async fn login(
     let phone = payload.phone_number.clone();
     let user = find_user_by_phone(payload.phone_number).await.unwrap();
     match user {
-        Some(_) => (
-            StatusCode::NOT_FOUND,
-            Json(serde_json::json!({ "status": "Not Found" })),
-        ),
+        Some(user) => {
+            session.insert("id", user.id).unwrap();
+            (
+                StatusCode::OK,
+                Json(serde_json::json!({ "user": user })),
+            )
+        }
         None => {
             let new_user = create_user(phone).await.unwrap();
             return (
