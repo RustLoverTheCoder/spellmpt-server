@@ -19,10 +19,7 @@ pub async fn login(
     match user {
         Some(user) => {
             session.insert("id", user.id).unwrap();
-            (
-                StatusCode::OK,
-                Json(serde_json::json!({ "user": user })),
-            )
+            (StatusCode::OK, Json(serde_json::json!({ "user": user })))
         }
         None => {
             let new_user = create_user(phone).await.unwrap();
@@ -34,7 +31,7 @@ pub async fn login(
     }
 }
 
-pub async fn login_out(mut session: WritableSession) -> (StatusCode) {
+pub async fn login_out(mut session: WritableSession) -> StatusCode {
     session.destroy();
     StatusCode::NO_CONTENT
 }

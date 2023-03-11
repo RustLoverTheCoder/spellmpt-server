@@ -7,7 +7,7 @@ use axum::{
 };
 use axum_sessions::SessionLayer;
 use handler::{
-    auth::login,
+    auth::{login,login_out},
     user::{get_user_info, update_user_info},
 };
 use reels_config::{
@@ -25,7 +25,7 @@ async fn start() -> anyhow::Result<()> {
     let session_layer = SessionLayer::new(store, jwt_secret_bytes).with_secure(false);
     let auth_router = Router::new()
         .route("/login", post(login))
-        .route("/login/out", post(handler::auth::login_out));
+        .route("/login/out", post(login_out));
 
     let user_router = Router::new()
         .route("/get/info", get(get_user_info))
