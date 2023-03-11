@@ -21,7 +21,7 @@ impl MigrationTrait for Migration {
                         ColumnDef::new(User::CreatedAt)
                             .timestamp_with_time_zone()
                             .not_null(),
-                    ).to_owned()
+                    )
                     .col(
                         ColumnDef::new(User::UpdatedAt)
                             .timestamp_with_time_zone(),

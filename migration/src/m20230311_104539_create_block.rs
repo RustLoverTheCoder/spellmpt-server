@@ -21,6 +21,16 @@ impl MigrationTrait for Migration {
                     .col(ColumnDef::new(Block::Title).string().not_null())
                     .col(ColumnDef::new(Block::ParentId).uuid())
                     .col(ColumnDef::new(Block::UserId).uuid().not_null())
+                    .col(ColumnDef::new(Block::Status).integer().not_null())
+                    .col(
+                        ColumnDef::new(Block::CreatedAt)
+                            .timestamp_with_time_zone()
+                            .not_null(),
+                    )
+                    .col(
+                        ColumnDef::new(Block::UpdatedAt)
+                            .timestamp_with_time_zone(),
+                    )
                     .to_owned(),
             )
             .await
@@ -42,4 +52,7 @@ enum Block {
     Title,
     UserId,
     ParentId,
+    Status,
+    CreatedAt,
+    UpdatedAt,
 }
