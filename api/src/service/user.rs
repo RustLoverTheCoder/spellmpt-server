@@ -34,8 +34,10 @@ pub async fn create_user(phone: String) -> Result<user::Model, DbErr> {
     return result;
 }
 
-pub async fn get_user_info() -> Result<()> {
-    Ok(())
+pub async fn get_user_info_by_id(user_id: Uuid) -> Result<Option<user::Model>, DbErr> {
+    let db = DB.get().unwrap();
+    let user = User::find_by_id(user_id).one(db).await;
+    user
 }
 
 pub async fn update_user_info() -> Result<()> {
