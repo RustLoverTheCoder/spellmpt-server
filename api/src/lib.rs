@@ -1,5 +1,6 @@
 mod handler;
 mod service;
+mod utils;
 
 use axum::{
     routing::{get, post},
@@ -15,6 +16,8 @@ use reels_config::{
     init,
 };
 use std::net::SocketAddr;
+
+use crate::utils::shutdown::shutdown_signal;
 
 #[tokio::main]
 async fn start() -> anyhow::Result<()> {
@@ -40,6 +43,7 @@ async fn start() -> anyhow::Result<()> {
 
     axum::Server::bind(&addr)
         .serve(app.into_make_service())
+        .with_graceful_shutdown(shutdown_signal())
         .await?;
     Ok(())
 }
