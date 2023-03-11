@@ -14,11 +14,17 @@ pub async fn login(
     mut session: WritableSession,
     Json(payload): Json<UserForm>,
 ) -> (StatusCode, Json<serde_json::Value>) {
-    find_user_by_phone(payload.phone_number).await;
-    (
-        StatusCode::NOT_FOUND,
-        Json(serde_json::json!({ "status": "Not Found" })),
-    )
+    let user = find_user_by_phone(payload.phone_number).await.unwrap();
+    match user {
+        Some(_) => (
+            StatusCode::OK,
+            Json(serde_json::json!({ "status": "some" })),
+        ),
+        None => (
+            StatusCode::NOT_FOUND,
+            Json(serde_json::json!({ "status": "Not Found" })),
+        ),
+    }
 }
 
 pub async fn login_out(mut session: WritableSession) -> (StatusCode, Json<serde_json::Value>) {

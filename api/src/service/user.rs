@@ -9,8 +9,7 @@ pub async fn find_user_by_phone(phone: String) -> Result<Option<user::Model>> {
     let user = User::find()
         .filter(user::Column::PhoneNumber.eq(phone))
         .one(db)
-        .await
-        .expect("Cannot retrieve user");
+        .await?;
     Ok(user)
 }
 
