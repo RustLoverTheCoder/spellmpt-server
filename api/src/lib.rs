@@ -8,7 +8,8 @@ use axum::{
 };
 use axum_sessions::SessionLayer;
 use handler::{
-    auth::{login,login_out},
+    auth::{login, login_out},
+    block::{create_block, get_block_info, update_block},
     user::{get_user_info, update_user_info},
 };
 use reels_config::{
@@ -33,9 +34,16 @@ async fn start() -> anyhow::Result<()> {
     let user_router = Router::new()
         .route("/get/info", get(get_user_info))
         .route("/update/info", post(update_user_info));
+
+    let block_router = Router::new()
+        .route("/info", get(get_block_info))
+        .route("/create", post(create_block))
+        .route("/update", post(update_block));
+
     let api_routes = Router::new()
         .nest("/auth", auth_router)
-        .nest("/user", user_router);
+        .nest("/user", user_router)
+        .nest("/block", block_router);
 
     let app = Router::new().nest("/api", api_routes).layer(session_layer);
     let addr = SocketAddr::from(([127, 0, 0, 1], 8000));
