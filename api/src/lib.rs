@@ -32,7 +32,7 @@ async fn start() -> anyhow::Result<()> {
         .route("/login/out", post(login_out));
 
     let user_router = Router::new()
-        .route("/get/info", get(get_user_info))
+        .route("/info", get(get_user_info))
         .route("/update/info", post(update_user_info));
 
     let block_router = Router::new()

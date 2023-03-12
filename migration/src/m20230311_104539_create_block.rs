@@ -18,7 +18,7 @@ impl MigrationTrait for Migration {
                             .not_null()
                             .primary_key(),
                     )
-                    .col(ColumnDef::new(Block::Title).string().not_null())
+                    .col(ColumnDef::new(Block::Title).string())
                     .col(ColumnDef::new(Block::ParentId).uuid())
                     .col(ColumnDef::new(Block::UserId).uuid().not_null())
                     .col(ColumnDef::new(Block::Status).integer().not_null())
