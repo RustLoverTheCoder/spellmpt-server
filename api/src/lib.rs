@@ -36,7 +36,7 @@ async fn start() -> anyhow::Result<()> {
         .route("/update/info", post(update_user_info));
 
     let block_router = Router::new()
-        .route("/info", get(get_block_info))
+        .route("/:block_id", get(get_block_info))
         .route("/create", post(create_block))
         .route("/update", post(update_block));
 

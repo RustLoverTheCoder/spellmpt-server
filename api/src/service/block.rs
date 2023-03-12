@@ -27,3 +27,9 @@ pub async fn create_post_by_parent_id(
     let result = new_block.insert(db).await;
     return result;
 }
+
+pub async fn find_block_by_id(id: Uuid) -> Result<Option<block::Model>, DbErr> {
+    let db = DB.get().unwrap();
+    let block = Block::find_by_id(id).one(db).await;
+    block
+}

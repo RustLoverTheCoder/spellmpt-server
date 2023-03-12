@@ -1,9 +1,17 @@
-use axum::{http::StatusCode, response::IntoResponse, Json};
+use axum::{extract::Path, http::StatusCode, response::IntoResponse, Json};
 use axum_sessions::extractors::ReadableSession;
 use serde::Deserialize;
 use uuid::Uuid;
 
-use crate::service::{block::create_post_by_parent_id, user::get_user_info_by_id};
+use crate::service::{
+    block::{create_post_by_parent_id, find_block_by_id},
+    user::get_user_info_by_id,
+};
+
+#[derive(Deserialize)]
+pub struct IdPath {
+    block_id: Uuid,
+}
 
 #[derive(Deserialize)]
 pub struct CreatePostForm {
@@ -48,9 +56,10 @@ pub async fn update_block(
     );
 }
 
-pub async fn get_block_info() -> impl IntoResponse {
-    return (
-        StatusCode::UNAUTHORIZED,
-        Json(serde_json::json!({ "status": "Not Found" })),
-    );
+pub async fn get_block_info(Path(IdPath { block_id }): Path<IdPath>) -> impl IntoResponse {
+    let block = find_block_by_id(block_id).await.unwrap();
+    match block {
+        None => (StatusCode::NOT_FOUND, Json(block)),
+        Some(_) => (StatusCode::OK, Json(block)),
+    }
 }
