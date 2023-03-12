@@ -4,7 +4,7 @@ use serde::Deserialize;
 use uuid::Uuid;
 
 use crate::service::{
-    block::{create_post_by_parent_id, find_block_by_id},
+    block::{create_post_by_parent_id, find_block_by_id, update_block_by_modal},
     user::get_user_info_by_id,
 };
 
@@ -39,7 +39,7 @@ pub async fn create_block(
 }
 
 #[derive(Deserialize)]
-pub struct updatePostForm {
+pub struct UpdatePostForm {
     id: Uuid,
     parant_id: Option<Uuid>,
     status: Option<i32>,
@@ -48,18 +48,43 @@ pub struct updatePostForm {
 
 pub async fn update_block(
     session: ReadableSession,
-    Json(payload): Json<updatePostForm>,
-) -> impl IntoResponse {
-    return (
-        StatusCode::UNAUTHORIZED,
-        Json(serde_json::json!({ "status": "Not Found" })),
-    );
+    Json(payload): Json<UpdatePostForm>,
+) -> (StatusCode, Json<Option<serde_json::Value>>) {
+    if let Some(user_id) = session.get::<Uuid>("id") {
+        let user = get_user_info_by_id(user_id).await.unwrap();
+        match user {
+            None => (StatusCode::UNAUTHORIZED, Json(None)),
+            Some(user) => {
+                let block_result = find_block_by_id(payload.id).await.unwrap();
+                match block_result {
+                    None => (StatusCode::BAD_REQUEST, Json(None)),
+                    Some(block) => {
+                        if block.user_id == user.id {
+                            let block = update_block_by_modal(
+                                block,
+                                payload.parant_id,
+                                payload.title,
+                                Some(1),
+                            )
+                            .await
+                            .unwrap();
+                            return (StatusCode::OK, Json(Some(serde_json::json!({ "block": block }))));
+                        } else {
+                            return (StatusCode::UNAUTHORIZED, Json(None));
+                        }
+                    }
+                }
+            }
+        }
+    } else {
+        (StatusCode::NOT_FOUND, Json(None))
+    }
 }
 
 pub async fn get_block_info(Path(IdPath { block_id }): Path<IdPath>) -> impl IntoResponse {
     let block = find_block_by_id(block_id).await.unwrap();
     match block {
-        None => (StatusCode::NOT_FOUND, Json(block)),
+        None => (StatusCode::NOT_FOUND, Json(None)),
         Some(_) => (StatusCode::OK, Json(block)),
     }
 }

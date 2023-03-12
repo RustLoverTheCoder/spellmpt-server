@@ -33,3 +33,23 @@ pub async fn find_block_by_id(id: Uuid) -> Result<Option<block::Model>, DbErr> {
     let block = Block::find_by_id(id).one(db).await;
     block
 }
+
+pub async fn update_block_by_modal(
+    block: block::Model,
+    parent_id: Option<Uuid>,
+    title: Option<String>,
+    status: Option<i32>,
+) -> Result<block::Model, DbErr> {
+    let update_at = Utc::now();
+    let db = DB.get().unwrap();
+    let mut block: block::ActiveModel = block.into();
+    block.title = Set(title.to_owned());
+    block.parent_id = Set(parent_id.to_owned());
+    match status {
+        Some(status) => block.status = Set(status.to_owned()),
+        None => {}
+    };
+    block.updated_at = Set(Some(update_at.to_owned().into()));
+    let block_result = block.update(db).await;
+    block_result
+}
