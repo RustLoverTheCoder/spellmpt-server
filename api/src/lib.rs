@@ -1,6 +1,7 @@
 mod handler;
 mod service;
 mod utils;
+mod extractor;
 
 use axum::{
     routing::{get, post},
