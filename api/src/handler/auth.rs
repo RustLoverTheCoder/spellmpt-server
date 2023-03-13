@@ -23,6 +23,7 @@ pub async fn login(
         }
         None => {
             let new_user = create_user(phone).await.unwrap();
+            session.insert("id", new_user.id).unwrap();
             return (
                 StatusCode::OK,
                 Json(serde_json::json!({ "user": new_user })),
