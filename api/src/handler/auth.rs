@@ -32,7 +32,10 @@ pub async fn login(
     }
 }
 
-pub async fn login_out(mut session: WritableSession) -> StatusCode {
+pub async fn login_out(mut session: WritableSession) -> (StatusCode, Json<serde_json::Value>) {
     session.destroy();
-    StatusCode::NO_CONTENT
+    (
+        StatusCode::NO_CONTENT,
+        Json(serde_json::json!({ "success": true })),
+    )
 }

@@ -15,7 +15,7 @@ pub struct IdPath {
 
 #[derive(Deserialize)]
 pub struct CreatePostForm {
-    parant_id: Option<Uuid>,
+    parent_id: Option<Uuid>,
 }
 
 pub async fn create_block(
@@ -27,7 +27,7 @@ pub async fn create_block(
         match user {
             None => (StatusCode::UNAUTHORIZED, Json(None)),
             Some(user) => {
-                let new_post = create_post_by_parent_id(payload.parant_id, user.id)
+                let new_post = create_post_by_parent_id(payload.parent_id, user.id)
                     .await
                     .unwrap();
                 (StatusCode::CREATED, Json(Some(new_post)))
@@ -41,7 +41,7 @@ pub async fn create_block(
 #[derive(Deserialize)]
 pub struct UpdatePostForm {
     id: Uuid,
-    parant_id: Option<Uuid>,
+    parent_id: Option<Uuid>,
     status: Option<i32>,
     title: Option<String>,
 }
@@ -62,7 +62,7 @@ pub async fn update_block(
                         if block.user_id == user.id {
                             let block = update_block_by_modal(
                                 block,
-                                payload.parant_id,
+                                payload.parent_id,
                                 payload.title,
                                 Some(1),
                             )
