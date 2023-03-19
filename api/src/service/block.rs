@@ -53,3 +53,14 @@ pub async fn update_block_by_modal(
     let block_result = block.update(db).await;
     block_result
 }
+
+
+pub async fn find_all_blocks(user_id: Uuid, parent_id: Option<Uuid>) -> Result<Vec<block::Model>, DbErr> {
+    let db = DB.get().unwrap();
+    let mut query = Block::find().filter(block::Column::UserId.eq(user_id));
+    if let Some(parent_id) = parent_id {
+        query = query.filter(block::Column::ParentId.eq(parent_id));
+    }
+    let blocks = query.all(db).await;
+    blocks
+}

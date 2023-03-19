@@ -4,7 +4,7 @@ use serde::Deserialize;
 use uuid::Uuid;
 
 use crate::service::{
-    block::{create_post_by_parent_id, find_block_by_id, update_block_by_modal},
+    block::{create_post_by_parent_id, find_all_blocks, find_block_by_id, update_block_by_modal},
     user::get_user_info_by_id,
 };
 
@@ -14,13 +14,13 @@ pub struct IdPath {
 }
 
 #[derive(Deserialize)]
-pub struct CreatePostForm {
+pub struct CreateBlockForm {
     parent_id: Option<Uuid>,
 }
 
 pub async fn create_block(
     session: ReadableSession,
-    Json(payload): Json<CreatePostForm>,
+    Json(payload): Json<CreateBlockForm>,
 ) -> impl IntoResponse {
     if let Some(user_id) = session.get::<Uuid>("id") {
         let user = get_user_info_by_id(user_id).await.unwrap();
@@ -39,16 +39,16 @@ pub async fn create_block(
 }
 
 #[derive(Deserialize)]
-pub struct UpdatePostForm {
+pub struct UpdateBlockForm {
     id: Uuid,
     parent_id: Option<Uuid>,
-    status: Option<i32>,
+    // status: Option<i32>,
     title: Option<String>,
 }
 
 pub async fn update_block(
     session: ReadableSession,
-    Json(payload): Json<UpdatePostForm>,
+    Json(payload): Json<UpdateBlockForm>,
 ) -> (StatusCode, Json<Option<serde_json::Value>>) {
     if let Some(user_id) = session.get::<Uuid>("id") {
         let user = get_user_info_by_id(user_id).await.unwrap();
@@ -68,7 +68,10 @@ pub async fn update_block(
                             )
                             .await
                             .unwrap();
-                            return (StatusCode::OK, Json(Some(serde_json::json!({ "block": block }))));
+                            return (
+                                StatusCode::OK,
+                                Json(Some(serde_json::json!({ "block": block }))),
+                            );
                         } else {
                             return (StatusCode::UNAUTHORIZED, Json(None));
                         }
@@ -86,5 +89,31 @@ pub async fn get_block_info(Path(IdPath { block_id }): Path<IdPath>) -> impl Int
     match block {
         None => (StatusCode::NOT_FOUND, Json(None)),
         Some(_) => (StatusCode::OK, Json(block)),
+    }
+}
+
+#[derive(Deserialize)]
+pub struct GetBlocksForm {
+    parent_id: Option<Uuid>,
+}
+
+pub async fn get_all_blocks(
+    session: ReadableSession,
+    Json(payload): Json<GetBlocksForm>,
+) -> (StatusCode, Json<Option<serde_json::Value>>) {
+    if let Some(user_id) = session.get::<Uuid>("id") {
+        let user = get_user_info_by_id(user_id).await.unwrap();
+        match user {
+            None => (StatusCode::UNAUTHORIZED, Json(None)),
+            Some(user) => {
+                let blocks = find_all_blocks(user.id, payload.parent_id).await.unwrap();
+                (
+                    StatusCode::OK,
+                    Json(Some(serde_json::json!({ "blocks": blocks }))),
+                )
+            }
+        }
+    } else {
+        return (StatusCode::UNAUTHORIZED, Json(None));
     }
 }

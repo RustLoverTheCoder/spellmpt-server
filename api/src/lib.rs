@@ -1,7 +1,7 @@
+mod extractor;
 mod handler;
 mod service;
 mod utils;
-mod extractor;
 
 use axum::{
     routing::{get, post},
@@ -10,7 +10,7 @@ use axum::{
 use axum_sessions::SessionLayer;
 use handler::{
     auth::{login, login_out},
-    block::{create_block, get_block_info, update_block},
+    block::{create_block, get_all_blocks, get_block_info, update_block},
     user::{get_user_info, update_user_info},
 };
 use reels_config::{
@@ -38,6 +38,7 @@ async fn start() -> anyhow::Result<()> {
 
     let block_router = Router::new()
         .route("/:block_id", get(get_block_info))
+        .route("/blocks", get(get_all_blocks))
         .route("/create", post(create_block))
         .route("/update", post(update_block));
 
