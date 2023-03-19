@@ -99,7 +99,7 @@ pub struct GetBlocksForm {
 
 pub async fn get_all_blocks(
     session: ReadableSession,
-    Json(payload): Json<GetBlocksForm>,
+    Path(payload): Path<GetBlocksForm>,
 ) -> (StatusCode, Json<Option<serde_json::Value>>) {
     if let Some(user_id) = session.get::<Uuid>("id") {
         let user = get_user_info_by_id(user_id).await.unwrap();
