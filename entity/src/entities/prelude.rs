@@ -2,4 +2,5 @@
 
 pub use super::prompt::Entity as Prompt;
 pub use super::tag::Entity as Tag;
+pub use super::taggable::Entity as Taggable;
 pub use super::user::Entity as User;

@@ -4,4 +4,5 @@ pub mod prelude;
 
 pub mod prompt;
 pub mod tag;
+pub mod taggable;
 pub mod user;
