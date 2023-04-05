@@ -15,7 +15,7 @@ impl MigrationTrait for Migration {
                     .col(ColumnDef::new(Prompt::Title).string().not_null())
                     .col(ColumnDef::new(Prompt::Content).string().not_null())
                     .col(ColumnDef::new(Prompt::Status).integer().not_null())
-                    .col(ColumnDef::new(Prompt::Type).integer().not_null())
+                    .col(ColumnDef::new(Prompt::PromptType).integer().not_null())
                     .col(ColumnDef::new(Prompt::UserId).uuid().not_null())
                     .col(
                         ColumnDef::new(Prompt::CreatedAt)
@@ -43,7 +43,7 @@ enum Prompt {
     Title,
     Content,
     Status,
-    Type,
+    PromptType,
     UserId,
     CreatedAt,
     UpdatedAt,

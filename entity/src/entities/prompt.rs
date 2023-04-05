@@ -11,7 +11,7 @@ pub struct Model {
     pub title: String,
     pub content: String,
     pub status: i32,
-    pub r#type: i32,
+    pub prompt_type: i32,
     pub user_id: Uuid,
     pub created_at: DateTimeWithTimeZone,
     pub updated_at: Option<DateTimeWithTimeZone>,
