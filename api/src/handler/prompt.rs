@@ -1,5 +1,5 @@
-use crate::service::prompt::create_prompt_func;
-use axum::{http::StatusCode, response::IntoResponse, Json};
+use crate::service::prompt::{create_prompt_func, find_prompt_by_id_func};
+use axum::{extract::Path, http::StatusCode, Json};
 use axum_sessions::extractors::ReadableSession;
 use serde::Deserialize;
 use serde_json::json;
@@ -26,5 +26,21 @@ pub async fn create_prompt(
     } else {
         // Session does not exist or is invalid, return unauthorized status code
         (StatusCode::UNAUTHORIZED, Json(json!({})))
+    }
+}
+
+#[derive(Deserialize)]
+pub struct IdPath {
+    prompt_id: Uuid,
+}
+
+pub async fn find_prompt(
+    Path(IdPath { prompt_id }): Path<IdPath>,
+) -> (StatusCode, Json<serde_json::Value>) {
+    let prompt = find_prompt_by_id_func(prompt_id).await.unwrap();
+
+    match prompt {
+        Some(prompt) => (StatusCode::OK, Json(json!({ "prompt": prompt }))),
+        None => (StatusCode::NOT_FOUND, Json(json!({}))),
     }
 }

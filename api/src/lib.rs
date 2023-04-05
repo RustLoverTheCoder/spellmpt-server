@@ -14,7 +14,7 @@ use config::{
 };
 use handler::{
     auth::{login, login_out},
-    prompt::create_prompt,
+    prompt::{create_prompt, find_prompt},
     user::{get_user_info, update_user_info},
 };
 use std::net::SocketAddr;
@@ -36,7 +36,9 @@ async fn start() -> anyhow::Result<()> {
         .route("/info", get(get_user_info))
         .route("/update/info", post(update_user_info));
 
-    let prompt_router = Router::new().route("/create", post(create_prompt));
+    let prompt_router = Router::new()
+        .route("/create", post(create_prompt))
+        .route("/info", get(find_prompt));
 
     let api_routes = Router::new()
         .nest("/auth", auth_router)

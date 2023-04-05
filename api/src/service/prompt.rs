@@ -30,3 +30,11 @@ pub async fn create_prompt_func(
     let result = new_prompt.insert(db).await;
     return result;
 }
+
+// Define a function to find a prompt by its ID
+pub async fn find_prompt_by_id_func(prompt_id: Uuid) -> Result<Option<prompt::Model>, DbErr> {
+    let db = DB.get().unwrap();
+    let prompt = Prompt::find_by_id(prompt_id).one(db).await;
+    prompt
+}
+
