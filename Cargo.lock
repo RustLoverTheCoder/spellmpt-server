@@ -50,6 +50,27 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "224afbd727c3d6e4b90103ece64b8d1b67fbb1973b1046c2281eed3f3803f800"
 
 [[package]]
+name = "api"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "async-redis-session",
+ "axum",
+ "axum-sessions",
+ "chrono",
+ "config",
+ "entity",
+ "migration",
+ "serde",
+ "serde_json",
+ "tokio",
+ "tower",
+ "tower-http 0.4.0",
+ "tracing",
+ "uuid",
+]
+
+[[package]]
 name = "arrayref"
 version = "0.3.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -642,6 +663,22 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c278839b831783b70278b14df4d45e1beb1aad306c07bb796637de9a0e323e8e"
 dependencies = [
  "crossbeam-utils",
+]
+
+[[package]]
+name = "config"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "async-redis-session",
+ "axum-sessions",
+ "dotenvy",
+ "migration",
+ "once_cell",
+ "regex",
+ "sea-orm",
+ "tracing",
+ "tracing-subscriber",
 ]
 
 [[package]]
@@ -1769,51 +1806,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "reels-api"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "async-redis-session",
- "axum",
- "axum-sessions",
- "chrono",
- "entity",
- "migration",
- "reels-config",
- "serde",
- "serde_json",
- "tokio",
- "tower",
- "tower-http 0.4.0",
- "tracing",
- "uuid",
-]
-
-[[package]]
-name = "reels-config"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "async-redis-session",
- "axum-sessions",
- "dotenvy",
- "migration",
- "once_cell",
- "regex",
- "sea-orm",
- "tracing",
- "tracing-subscriber",
-]
-
-[[package]]
-name = "reels-server"
-version = "0.1.0"
-dependencies = [
- "reels-api",
- "tracing",
-]
-
-[[package]]
 name = "regex"
 version = "1.7.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2180,6 +2172,14 @@ dependencies = [
  "itoa 1.0.5",
  "ryu",
  "serde",
+]
+
+[[package]]
+name = "server"
+version = "0.1.0"
+dependencies = [
+ "api",
+ "tracing",
 ]
 
 [[package]]

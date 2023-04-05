@@ -6,7 +6,7 @@ use migration::{
     sea_orm::{ActiveModelTrait, ColumnTrait, EntityTrait, QueryFilter, Set},
     DbErr,
 };
-use reels_config::contants::DB;
+use config::contants::DB;
 use uuid::Uuid;
 
 pub async fn find_user_by_phone(phone: String) -> Result<Option<user::Model>> {

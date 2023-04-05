@@ -8,14 +8,13 @@ use axum::{
     Router,
 };
 use axum_sessions::SessionLayer;
-use handler::{
-    auth::{login, login_out},
-    block::{create_block, get_all_blocks, get_block_info, update_block},
-    user::{get_user_info, update_user_info},
-};
-use reels_config::{
+use config::{
     contants::{JWT_SECRET, REDIS_SESSION_STORE},
     init,
+};
+use handler::{
+    auth::{login, login_out},
+    user::{get_user_info, update_user_info},
 };
 use std::net::SocketAddr;
 
@@ -36,16 +35,9 @@ async fn start() -> anyhow::Result<()> {
         .route("/info", get(get_user_info))
         .route("/update/info", post(update_user_info));
 
-    let block_router = Router::new()
-        .route("/:block_id", get(get_block_info))
-        .route("/blocks", get(get_all_blocks))
-        .route("/create", post(create_block))
-        .route("/update", post(update_block));
-
     let api_routes = Router::new()
         .nest("/auth", auth_router)
-        .nest("/user", user_router)
-        .nest("/block", block_router);
+        .nest("/user", user_router);
 
     let app = Router::new().nest("/api", api_routes).layer(session_layer);
     let addr = SocketAddr::from(([127, 0, 0, 1], 8000));

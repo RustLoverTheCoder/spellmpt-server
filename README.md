@@ -1,4 +1,4 @@
-# reels-server
+# server
 
 ## docker-compose
 
