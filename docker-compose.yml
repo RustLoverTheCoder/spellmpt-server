@@ -11,7 +11,7 @@ services:
     environment:
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=123456
-    container_name: reels-db
+    container_name: spellmpt-db
 
   redis:
     image: redis:latest
@@ -21,4 +21,4 @@ services:
       - ./redis.conf:/etc/redis/redis.conf
     command: redis-server /etc/redis/redis.conf
     restart: on-failure
-    container_name: reels-redis
+    container_name: spellmpt-redis
