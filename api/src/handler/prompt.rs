@@ -17,11 +17,12 @@ pub async fn create_prompt(
     Json(req): Json<CreatePromptRequest>,
 ) -> (StatusCode, Json<serde_json::Value>) {
     // Check if the session exists and is valid
-    if let Some(_) = session.get::<Uuid>("user_id") {
+    if let Some(user_id) = session.get::<Uuid>("id") {
         // Session exists and is valid, proceed with creating the prompt
-        let prompt = create_prompt_func(req.title, req.content, req.prompt_type)
+        let prompt = create_prompt_func(req.title, req.content, req.prompt_type, user_id)
             .await
             .unwrap();
+
         (StatusCode::CREATED, Json(json!({ "prompt": prompt })))
     } else {
         // Session does not exist or is invalid, return unauthorized status code

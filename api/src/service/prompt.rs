@@ -14,6 +14,7 @@ pub async fn create_prompt_func(
     title: String,
     content: String,
     prompt_type: i32,
+    user_id: Uuid,
 ) -> Result<prompt::Model, DbErr> {
     let db = DB.get().unwrap();
     let status = 0;
@@ -24,6 +25,7 @@ pub async fn create_prompt_func(
         content: Set(content.to_owned()),
         prompt_type: Set(prompt_type.to_owned()),
         status: Set(status.to_owned()),
+        user_id: Set(user_id.to_owned()),
         created_at: Set(create_at.to_owned().into()),
         ..Default::default() // all other attributes are `NotSet`
     };
@@ -37,4 +39,3 @@ pub async fn find_prompt_by_id_func(prompt_id: Uuid) -> Result<Option<prompt::Mo
     let prompt = Prompt::find_by_id(prompt_id).one(db).await;
     prompt
 }
-
